@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.snapcheck.demo.ethereum.EthereumService;
-import com.snapcheck.demo.ethereum.EthereumServiceImpl;
 
 @RestController
 public class TransactionController {

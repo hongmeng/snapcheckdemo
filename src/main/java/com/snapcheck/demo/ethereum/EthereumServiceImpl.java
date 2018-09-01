@@ -16,7 +16,6 @@ import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.utils.Numeric;
 
 import com.snapcheck.demo.SnapCheckApplication;
 import com.snapcheck.demo.api.BankTransaction;
@@ -56,9 +55,10 @@ public class EthereumServiceImpl implements EthereumService {
     				.getBlock();
 		    LOGGER.debug("Reading Block # {} with {} transactions", i, currentBlock.getTransactions().size());
 
+    		//no idea why this typecast is needed or why TransactionResult is a raw type
+		    @SuppressWarnings("rawtypes")
 	    	List<EthBlock.TransactionResult> transactions = currentBlock.getTransactions();
-	    	for (EthBlock.TransactionResult x : transactions) {
-	    		//no idea why this typecast is needed or why TransactionResult is a raw type
+	    	for (@SuppressWarnings("rawtypes") EthBlock.TransactionResult x : transactions) {
 	    		EthBlock.TransactionObject transaction = (EthBlock.TransactionObject) x;
 	        	BankTransaction t = new BankTransaction();
 	        	t.setAccountFrom(transaction.getFrom());

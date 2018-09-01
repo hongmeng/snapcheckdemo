@@ -6,10 +6,12 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.web3j.utils.Numeric;
 
 import com.snapcheck.demo.api.BankTransaction;
+import com.snapcheck.demo.security.AESEncryption;
 
 @Component
 public class EthereumTransactionMarshalerImpl implements EthereumTransactionMarshaler {
@@ -19,12 +21,16 @@ public class EthereumTransactionMarshalerImpl implements EthereumTransactionMars
 	 * The entire data is then ZIP compressed for efficiency
 	 * 
 	 */
+	
+	@Autowired
+	protected AESEncryption enc;
+	
 	public String marshal(BankTransaction t) throws IOException {
 		StringBuffer buf = new StringBuffer();
 		buf.append(t.getFrom()).append("|")
 			.append(t.getTo()).append("|")
 			.append(t.getRoutingNumber()).append("|")
-			.append(t.getAccountNumber()).append("|")
+			.append(enc.encrypt(t.getAccountNumber())).append("|")
 			.append(t.getAmount()).append("|")
 			.append(t.getAttachment());
 		
@@ -51,10 +57,10 @@ public class EthereumTransactionMarshalerImpl implements EthereumTransactionMars
 		t.setFrom(fields[0]);
 		t.setTo(fields[1]);
 		t.setRoutingNumber(fields[2]);
-		t.setAccountNumber(fields[3]);
+		t.setAccountNumber(enc.decrypt(fields[3]));
 		t.setAmount(Double.parseDouble(fields[4]));
 		t.setAttachment(fields[5]);
 		
 		return;
-	}
+	}	
 }
