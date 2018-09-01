@@ -14,6 +14,9 @@ public class BankTransaction {
 	//block 0 is a valid block so initial value of -1 is chosen to represent invalid block
 	private long blockNumber=-1;
 	
+	public String getStatus() {
+		return (blockNumber==-1) ? "Pending" : "Accepted";
+	}
 	
 /*** ECLIPSE GENERATED ***/
 	public String getHash() {
